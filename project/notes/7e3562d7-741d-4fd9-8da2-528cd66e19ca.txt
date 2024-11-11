@@ -1,0 +1,4 @@
+Título: Mi Primera Nota
+Contenido: Esto es un contenido de prueba para la nota.
+Fecha: 2024-10-31 03:25:22
+Autor: 

@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  notes-service:
+    build:
+      context: ./../notes-service
+      dockerfile: ./../notes-service/notes-service.dockerfile
+    restart: always
+    ports:
+      - "80"
+    volumes:
+      - ./notes:/notes  # Mapea la carpeta "notes" del contenedor al directorio "notes" en tu host
+    deploy:
+      mode: replicated
+      replicas: 1
+  
+  logger-service:
+    build:
+      context: ./../log-service
+      dockerfile: ./../log-service/log-service.dockerfile
+    restart: always
+    ports:
+      - "80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    
+  
+  broker-service:
+    build:
+      context: ./../broker-service
+      dockerfile: ./../broker-service/broker-service.dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  mongo:
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: logs
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: admin
+    volumes:
+      - ./db-data/mongo/:/data/mongo
+        
