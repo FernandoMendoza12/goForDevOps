@@ -1,3 +1,3 @@
 git add .
-git commit -m "Corregir import de data"
+git commit -m "Correccion del data import"
 git push
