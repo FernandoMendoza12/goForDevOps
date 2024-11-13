@@ -12,6 +12,7 @@ type RequestPayload struct {
 	Action string      `json:"action"`
 	Note   NotePayload `json:"note,omitempty"`
 	Log    LogPayload  `json:"log,omitempty"`
+	Auth   AuthPayload `json:"auth,omitempty"`
 }
 
 type NotePayload struct {
@@ -23,6 +24,11 @@ type NotePayload struct {
 type LogPayload struct {
 	Name string `json:"name"`
 	Data string `json:"data"`
+}
+
+type AuthPayload struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (app Config) Broker(w http.ResponseWriter, r *http.Request) {
@@ -49,6 +55,8 @@ func (app Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 		app.requestNote(w, requestPayload.Note)
 	case "log":
 		app.logItem(w, requestPayload.Log)
+	case "auth":
+		app.authUser(w, requestPayload.Auth)
 	default:
 		app.errorJSON(w, errors.New("accion no soportada"))
 	}
@@ -92,7 +100,7 @@ func (app Config) logItem(w http.ResponseWriter, log LogPayload) {
 
 	logServiceURL := "http://logger-service/log"
 
-	request, err := http.NewRequest("POS", logServiceURL, bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", logServiceURL, bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		app.errorJSON(w, err)
@@ -120,5 +128,9 @@ func (app Config) logItem(w http.ResponseWriter, log LogPayload) {
 	payload.Message = "logged"
 
 	app.writeJSON(w, http.StatusAccepted, payload)
+
+}
+
+func (app Config) authUser(w http.ResponseWriter, auth AuthPayload) {
 
 }

@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"log-service/data"
+	"logger/data"
+
 	"net/http"
 	"time"
 
@@ -29,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	client := mongoClient
+	client = mongoClient
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 
@@ -42,7 +43,7 @@ func main() {
 	}()
 
 	app := Config{
-		Models: data.Models,
+		Models: data.New(client),
 	}
 
 	fmt.Printf("Starting on webPort %s", webPort)
